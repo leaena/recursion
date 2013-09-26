@@ -5,30 +5,22 @@
 
 // But in stead we're going to implement it from scratch:
 var getElementsByClassName = function (className) {
-	var arrayElements = [];
 	var results = [];
-	$("*").each(function(){
-		if($(this).attr("class") != undefined){
-			arrayElements.push(this);
-		}
-	})
+	
+	function findElements(nodeList) {
+		var childList = nodeList.childNodes;
 
-	function checkElements(nodeList){
-		if (nodeList.length == 0) {
-			return null;
-		} else {
-			var thisClass = $(nodeList[0]).attr("class").split(" ");
-
-			for(var i = 0; i < thisClass.length; i++){
-				if(thisClass[i] == className){
-					results.push($(nodeList[0]).context);
+		for (var i = 0; i < childList.length; i++){
+			if (childList[i] instanceof HTMLElement){
+				if (childList[i].classList.contains(className)){
+					results.push(childList[i]);
 				}
+				findElements(childList[i]);
 			}
-			checkElements(nodeList.slice(1))
 		}
 	}
 
-	checkElements(arrayElements);
+	findElements(document.body);
 
 	return results;
 };
